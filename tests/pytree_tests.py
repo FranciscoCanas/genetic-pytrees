@@ -1,4 +1,5 @@
 from src.pytree import *
+from src.pyforest import *
 
 def if_base(p):
     if p[0]>0: return p[1]
@@ -29,6 +30,9 @@ func_mul=func(lambda p:p[0]*p[1],2,'mul')
 func_if=func(if_base,3,'if')
 func_gt=func(is_greater_base,2,'gt')
 
+# A list containing all funcs:
+func_list = [func_add, func_sub, func_mul, func_if, func_gt]
+
 def test_tree(tree, paramlist):
     print "Tree Structure: "
     tree.print_to_string(paramlist)
@@ -40,8 +44,7 @@ def pytree_tests():
     """
     Some tests for treerep.py
     """ 
-    # A list containing all funcs:
-    func_list = [func_add, func_sub, func_mul, func_if, func_gt]
+    
     
     t1=test_tree1()
     r1 = test_tree(t1,[2,3])
@@ -74,5 +77,24 @@ def pytree_tests():
     print "Crossbreeding tw2 and tw3:"
     tw3 = tw1.crossbreed(tw2)
     test_tree(tw3,[1,2,3])
+    
+def pyforest_tests():
+    """
+    Some test and useage examples for pyforest.py
+    """
+    f1 = pyforest([x*2 for x in range(6)], # possible depths
+                  func_list, # list of functions for the nodes
+                  range(1,5), # possible number of params
+                  [0.25,0.5,0.75], # possible func node probabilities
+                  [0.7,0.5,0.4,0.3], # possible param node probabilities
+                  [lambda: randint(-1,2),
+                   lambda: choice([x**3 for x in range(25)]),
+                   lambda: randint(-100,100)], # possible constant generation funcs
+                  10, # num of trees in forest
+                  lambda: choice([x**2 for x in range(6)])# parameter-gen func
+                  )
+    
+    f1.print_to_string()
+    print f1.evaluate_forest()
     
 
