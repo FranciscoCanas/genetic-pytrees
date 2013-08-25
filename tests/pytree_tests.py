@@ -1,5 +1,4 @@
-import sys, os
-from ..src import pytree
+from src.pytree import *
 
 def if_base(p):
     if p[0]>0: return p[1]
@@ -28,7 +27,7 @@ def test_tree(tree, paramlist):
     tree.print_to_string()
     print "Result: " + str(tree.evaluate(paramlist))
 
-def main():
+def pytree_tests():
     """
     Some tests for treerep.py
     """ 
@@ -66,5 +65,3 @@ def main():
     test_tree(tw3,[1,2,3])
     
 
-if __name__ == "__main__":
-    main()
