@@ -9,6 +9,13 @@ def is_greater_base(p):
     else: return 0
     
 def test_tree1():
+    """
+    Looks like this:
+    if (param[0]>0):
+        return param[1] + 5
+    else:
+        return param[1] - 2
+    """
     return fnode(func_if, [
         fnode(func_gt,[pnode(0),cnode(3)]),
         fnode(func_add,[pnode(1),cnode(5)]),
@@ -24,8 +31,10 @@ func_gt=func(is_greater_base,2,'gt')
 
 def test_tree(tree, paramlist):
     print "Tree Structure: "
-    tree.print_to_string()
-    print "Result: " + str(tree.evaluate(paramlist))
+    tree.print_to_string(paramlist)
+    result = tree.evaluate(paramlist)
+    print "Result: " + str(result)
+    return result
 
 def pytree_tests():
     """
@@ -35,8 +44,10 @@ def pytree_tests():
     func_list = [func_add, func_sub, func_mul, func_if, func_gt]
     
     t1=test_tree1()
-    test_tree(t1,[2,3])
-    test_tree(t1,[5,3])
+    r1 = test_tree(t1,[2,3])
+    r2 = test_tree(t1,[5,3])
+    assert (r1==1)
+    assert (r2==8)
     
     # Some random trees and tests:
     r1 = random_tree(3,func_list,3,0.6,0.5,lambda:randint(0,5))
@@ -47,7 +58,7 @@ def pytree_tests():
     test_tree(r2,[1,2,3])
     test_tree(r3,[1,2,3])
     
-    # tree wrapper tests
+    #tree wrapper tests
     print "Testing tree wrapper:"
     tw1 = tree(3,func_list,12,0.7,0.5,lambda:randint(0,5))
     test_tree(tw1,[1,2,3])

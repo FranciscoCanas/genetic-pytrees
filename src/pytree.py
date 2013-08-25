@@ -76,8 +76,8 @@ class tree:
 	def evaluate(self, paramlist):
 		return self.root.evaluate(paramlist)
 	
-	def print_to_string(self):
-		self.root.print_to_string()
+	def print_to_string(self,paramlist):
+		self.root.print_to_string(paramlist)
 
 class func:
 	"""
@@ -97,7 +97,7 @@ class fnode:
 	def __init__(self, func, children):
 		self.function = func.function	# A function object wrapped in func.
 		self.name= func.name		# The name of the function above.
-		# A list containing the children to this node (ie: the params for the func).
+		# A list containing the children to this node (ie: the paramlist for the func).
 		self.children = children	
 		
 	def evaluate(self,inp):
@@ -106,28 +106,28 @@ class fnode:
 		# evaluate using the childrens' return values.
 		return self.function(result)	
 	
-	def print_to_string(self,indent=0):
+	def print_to_string(self,paramlist,indent=0):
 		"""
 		Generates a printable representation of this source 'tree'.
 		"""
 		print (' '*indent)+self.name
 		for child in self.children:
-			child.print_to_string(indent+4)
+			child.print_to_string(paramlist,indent+4)
 		
 		
 class pnode:
 	"""
-	The parameter node: A node that returns one of the params passed 
+	The parameter node: A node that returns one of the paramlist passed 
 	into the program.
 	"""
 	def __init__(self, paramid):
 		self.paramid = paramid
 		
-	def evaluate(self, params):
-		return params[self.paramid]
+	def evaluate(self, paramlist):
+		return paramlist[self.paramid]
 	
-	def print_to_string(self,indent=0):
-		print ' '*indent + str(self.paramid)
+	def print_to_string(self,paramlist,indent=0):
+		print ' '*indent + str(self.paramid) + "=" + str(self.evaluate(paramlist))
 		
 class cnode:
 	"""
@@ -137,10 +137,10 @@ class cnode:
 	def __init__(self, value):
 		self.value = value
 	
-	def evaluate(self, params):
+	def evaluate(self, paramlist):
 		return self.value
 	
-	def print_to_string(self,indent=0):
+	def print_to_string(self,paramlist,indent=0):
 		print ' '*indent + str(self.value)
 
 		
@@ -160,7 +160,7 @@ def random_tree(num_params, func_list, max_depth=5, pr_func=0.5, pr_param=0.5,
 	if random() < pr_func and max_depth > 0:
 		# Randomly pick a function
 		f=choice(func_list)
-		# Create a list of subtrees based on function's required params:
+		# Create a list of subtrees based on function's required paramlist:
 		children = [random_tree(num_params,func_list,max_depth-1,
 		                        pr_func,pr_param,const_func)
 		            for i in range(f.numparam)]
@@ -168,7 +168,7 @@ def random_tree(num_params, func_list, max_depth=5, pr_func=0.5, pr_param=0.5,
 		return fnode(f,children)
 	# if we draw random param:
 	elif random()<pr_param:
-		# Return a parameter node randomly choosing one of the program params.
+		# Return a parameter node randomly choosing one of the program paramlist.
 		return pnode(randint(0,num_params-1))
 	else:
 		# Return a constant node with some random num.
