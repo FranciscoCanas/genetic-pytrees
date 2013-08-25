@@ -169,7 +169,6 @@ def random_tree(num_params, func_list, max_depth=5, pr_func=0.5, pr_param=0.5,
 	# if we draw random param:
 	elif random()<pr_param:
 		# Return a parameter node randomly choosing one of the program paramlist.
-		print num_params
 		return pnode(randint(0,max(num_params-1,0)))
 	else:
 		# Return a constant node with some random num.
